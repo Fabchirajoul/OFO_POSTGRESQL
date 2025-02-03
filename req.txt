@@ -231,7 +231,7 @@ python3-openid==3.2.0
 pytz==2024.1
 pyvis==0.3.2
 pywebpush==2.0.0
-pywin32==306
+
 pywin32-ctypes==0.2.2
 pywinpty==2.0.13
 PyYAML==6.0.1
