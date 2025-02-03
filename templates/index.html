@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hierarchical Dropdown Menu</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../static/style.css">
+</head>
+<body>
+    <div class="center-container">
+        <div class="center-container">
+            <!-- Search Bar -->
+            <div class="search-drop">
+                <div class="container mt-3">
+                    <input type="text" class="form-control" id="search-input" placeholder="Search..." oninput="fetchSuggestions(this.value)">
+                </div>
+                <div class="container mt-3">
+                
+                    <select id="search-dropdown" class="form-select">
+                      
+                    </select>
+                  </div>
+                <!-- Suggestions dropdown will appear here -->
+                
+            </div>
+            <div class="container list">
+                <ul class="dropdown-menu" id="suggestions-list" style="position: absolute;">
+                    <!-- Suggestions will be dynamically inserted here -->
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        
+        async function fetchSuggestions(query) {
+            const suggestionsList = document.getElementById("suggestions-list");
+            const selectElement = document.getElementById('search-dropdown');
+            suggestionsList.innerHTML = ""; // Clear any existing suggestions
+        
+            // Clear existing options in the dropdown
+            selectElement.innerHTML = ""; // This will reset the options in the dropdown every time
+        
+            // Only fetch if query is not empty
+            if (query.trim() === "") {
+                suggestionsList.classList.remove("show");
+                return;
+            }
+        
+            try {
+                // Fetch data from the API endpoint
+                const response = await fetch(`/suggestions?q=${query}`);
+                const data = await response.json();
+        
+                if (data.message) {
+                    const li = document.createElement("li");
+                    li.className = "dropdown-item"; // Bootstrap styling for dropdown items
+                    li.textContent = data.message;
+                    suggestionsList.appendChild(li);
+                }
+                // Check if there are results
+                else if (data.length > 0) {
+                    suggestionsList.classList.add("show"); // Show the dropdown
+        
+                    // Populate the dropdown with fetched suggestions
+                    data.forEach(item => {
+                        const li = document.createElement("li");
+                        li.className = "dropdown-item"; // Bootstrap styling for dropdown items
+                        li.textContent = `${item.ofo_code} - ${item.job_title} - ${item.source}`; // Assume each item in `data` is a string
+        
+                        // When a suggestion is clicked, populate the input and hide the dropdown
+                        li.onclick = function () {
+                            document.getElementById("search-input").value = `${item.ofo_code} - ${item.job_title} - ${item.source}`;
+                            suggestionsList.innerHTML = ""; // Clear suggestions
+                            suggestionsList.classList.remove("show"); // Hide dropdown
+        
+                            // Handle the select dropdown logic
+                            if (!item.specialization) {
+                                const option = document.createElement("option"); // Create a new option element
+                                // Set the value and text content for the option
+                                option.value = `${item.ofo_code}`;
+                                option.textContent = `${item.ofo_code} - ${item.job_title} - ${item.source}`;
+        
+                                // Append the new option to the select element
+                                selectElement.appendChild(option);
+                            } else if (item.specialization.length > 0) {
+                                special_list = item.specialization;
+                                special_list.forEach((items, index) => {
+                                    const option = document.createElement("option"); // Create a new option element
+                                    // Set the value and text content for the option
+                                    option.value = `${items.ofo_code}`;
+                                    option.textContent = `${items.ofo_code} - ${items.job_title} - ${items.source}`;
+        
+                                    
+        
+                                    // Append the new option to the select element
+                                    selectElement.appendChild(option);
+                                });
+                            }
+                        };
+        
+                        suggestionsList.appendChild(li);
+                    });
+                } else {
+                    suggestionsList.classList.remove("show"); // Hide dropdown if no matches
+                }
+            } catch (error) {
+                console.error("Error fetching suggestions:", error);
+            }
+        }
+        
+        
+    </script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+.center-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: black;
+}
+
+/* Style the search bar */
+#search-input {
+    width: 600px;
+    padding: 5px;
+    margin-bottom: 20px;
+    font-size: 16px;
+    border-radius: 5px;
+}
+
+/* Center the dropdown menu */
+#suggestions {
+    position: relative;
+}
+.form-select{
+    width: 600px;
+}
+.dropdown-menu {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    width: 600px;
+    color: black;
+}
+.search-drop{
+    display: flex;
+}
+
+.dropdown-item {
+    padding: 8px;
+    cursor: pointer;
+    color: black;
+}
+
+.dropdown-item:hover {
+    background-color: #f0f0f0;
+}
+
+/* Side menu for child items */
+.side-menu {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    width: 200px;
+    position: absolute;
+    top: 0;
+    z-index: 10;
+    background-color: #fff;
+}
+.list ul{
+    width: 600px;
+}
